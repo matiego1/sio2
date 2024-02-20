@@ -30,10 +30,7 @@ int main() {
         }
     }
 
-    while (!stos.empty()) {
-        wynik++;
-        stos.pop();
-    }
+    wynik += stos.size();
 
     cout << wynik;
 
