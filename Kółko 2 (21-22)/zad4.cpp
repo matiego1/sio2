@@ -36,29 +36,30 @@ void wypisz_int(int x) {
 
 int main() {
 	int n = wczytaj_int(' '), m = wczytaj_int('\n');
-	
+
 	for (int i = 1; i <= n; i++) {
 		for (int j = i + 1; j <= n; j++) {
 			odleg[i][j] = INF;
 			odleg[j][i] = INF;
 		}
 	}
-	
+
 	for (int i = 1; i <= m; i++) {
 		int a = wczytaj_int(' '), b = wczytaj_int(' '), c = wczytaj_int_znak('\n');
 		if (a != b) odleg[a][b] = c;
 	}
-	
+
 	for (int k = 1; k <= n; k++) {
 		for (int i = 1; i <= n; i++) {
+            if (odleg[i][k] >= INF) continue;
 			for (int j = 1; j <= n; j++) {
-				if (odleg[i][k] < INF && odleg[k][j] < INF && odleg[i][j] > odleg[i][k] + odleg[k][j]) {
+				if (odleg[k][j] < INF && odleg[i][j] > odleg[i][k] + odleg[k][j]) {
 					odleg[i][j] = max(-INF, odleg[i][k] + odleg[k][j]);
 				}
 			}
 		}
 	}
-	
+
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
 			for (int k = 1; k <= n; k++) {
@@ -68,7 +69,7 @@ int main() {
 			}
 		}
 	}
-	
+
 	for (int i = 1; i <= n; i++) {
 		for (int j = 1; j <= n; j++) {
 			if (odleg[i][j] == -INF) {
