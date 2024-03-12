@@ -2,61 +2,48 @@
 using namespace std;
 
 const int MAX = 5000;
-int DP[2][MAX + 1];
-string wynik[2][MAX + 1];
-char a[MAX];
-char b[MAX];
-
-void print_int(int x) {
-	if (x == 0) return;
-	print_int(x / 10);
-	putchar((x % 10) + '0');
-}
+int DP[MAX + 1][MAX + 1];
 
 int main() {
-	int znak, indeks = 0;
-	while ('a' <= (znak = getchar()) && znak <= 'z') {
-		a[indeks++] = znak;
-	}
-	int a_length = indeks;
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
 
-	indeks = 0;
-	while ('a' <= (znak = getchar()) && znak <= 'z') {
-		b[indeks++] = znak;
-	}
-	int b_length = indeks;;
+	string a, b;
+	cin >> a >> b;
 
-	for (int i = 0; i <= b_length; i++) {
-		wynik[0][i] = "";
-	}
-	wynik[1][0] = "";
-
-	for (int i = 1; i <= a_length; i++) {
-		for (int j = 1; j <= b_length; j++) {
+	for (int i = 1; i <= a.length(); i++) {
+		for (int j = 1; j <= b.length(); j++) {
 			if (a[i - 1] == b[j - 1]) {
-				DP[i % 2][j] = DP[(i - 1) % 2][j - 1] + 1;
-				wynik[i % 2][j] = wynik[(i - 1) % 2][j - 1] + a[i - 1];
+				DP[i][j] = DP[i - 1][j - 1] + 1;
 			} else {
-				if (DP[(i - 1) % 2][j] >= DP[i % 2][j - 1]) {
-					DP[i % 2][j] = DP[(i - 1) % 2][j];
-					wynik[i % 2][j] = wynik[(i - 1) % 2][j];
-				} else {
-					DP[i % 2][j] = DP[i % 2][j - 1];
-					wynik[i % 2][j] = wynik[i % 2][j - 1];
-				}
+				DP[i][j] = max(DP[i - 1][j] , DP[i][j - 1]);
 			}
 		}
 	}
 
-	if (DP[a_length % 2][b_length] == 0) {
-		putchar('0');
+	cout << DP[a.length()][b.length()] << "\n";
+
+	if (DP[a.length()][b.length()] == 0) {
 		return 0;
 	}
 
-	print_int(DP[a_length % 2][b_length]);
-	putchar('\n');
-	for (int i = 0; i < wynik[a_length % 2][b_length].length(); i++) {
-		putchar(wynik[a_length % 2][b_length][i]);
+	string wynik;
+
+	int x = a.length(), y = b.length();
+	while (x >= 1 && y >= 1) {
+		if (DP[x][y] == DP[x - 1][y]) {
+			x--;
+		} else if (DP[x][y] == DP[x][y - 1]) {
+			y--;
+		} else if (DP[x][y] == DP[x - 1][y - 1] + 1) {
+			wynik += a[x - 1];
+			x--;
+			y--;
+		}
+	}
+
+	for (int i = wynik.length() - 1; i >= 0; i--) {
+		cout << wynik[i];
 	}
 
 	return 0;
